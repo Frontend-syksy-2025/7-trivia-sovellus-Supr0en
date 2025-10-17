@@ -15,25 +15,20 @@ type datatype = {
 };
 function TriviaForm() {
     const [data, setData] = useState<datatype | null>(null);
-    const [isAvailable, setIsAvailable] = useState<boolean>(true);
     const getQuestion = () => {
-        if (!isAvailable) {
-            alert("Please try again in a moment")
-        } else {
-            fetch('https://opentdb.com/api.php?amount=1')
-                .then(response =>  {
-                    if (!response.ok)
-                        throw Error(response.statusText);
-                    return response.json();
-                })
-                .then(responseData => setData(responseData))
-                .catch(err => console.error(err))
-            setIsAvailable(false);
-            setTimeout(function() {
-                setIsAvailable(true);
-            }, 5000);
-        }
-    };
+        fetch('https://opentdb.com/api.php?amount=1')
+            .then(response =>  {
+                if (response.status === 429) {
+                    alert('Please try again in a moment.');
+                    return; // stop further processing
+                }
+                if (!response.ok)
+                    throw Error(response.statusText);
+                return response.json();
+            })
+            .then(responseData => setData(responseData))
+            .catch(err => console.error(err))
+    }
     return (
         <>
             <div style={{display:"flex", justifyContent:'center', alignItems: 'center', flexDirection: 'column' }}>
