@@ -29,10 +29,16 @@ function TriviaForm() {
             .then(responseData => setData(responseData))
             .catch(err => console.error(err))
     }
+    // this is used to convert string to have quotes and other marks that are else in wrong format by passing it through textarea and returning string.
+    function decodeText(text: string): string {
+        const txt = document.createElement('textarea');
+        txt.innerHTML = text;
+        return txt.value;
+    }
     return (
         <>
             <div style={{display:"flex", justifyContent:'center', alignItems: 'center', flexDirection: 'column' }}>
-                { data == null ? "Click the button to get a trivia question!" : data.results[0].question}
+                { data == null ? "Click the button to get a trivia question!" : decodeText(data.results[0].question)}
                 <button onClick={getQuestion}>Get question</button>
             </div>
         </>
